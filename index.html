@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Henry Keeler Projects</title>
+<meta name="description" content="Projects by Henry Keeler: an AI support assistant for PBS Wisconsin, route planning, web apps and machine learning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 5 5%22 shape-rendering=%22crispEdges%22%3E%3Cpath fill=%22%2386D69A%22 d=%22M2 0h1v1H2zM1 1h3v1H1zM0 2h5v1H0zM1 3h3v1H1zM2 4h1v1H2z%22/%3E%3C/svg%3E">
+<style>
+/* Layout: a quiet page under a pixel-art dusk. The masthead is a low-res scene (moss sky,
+   ember horizon, a watchtower with one green window); below it the page stays plain and readable,
+   with pixel touches only in borders, markers and headings. */
+:root {
+  --bg: #14130F;          /* warm charcoal */
+  --panel: #1C1A15;
+  --ink: #F0E8D6;         /* parchment white */
+  --muted: #A89D88;
+  --line: #34302A;
+  --green: #86D69A;       /* moss glow */
+  --green-dim: rgba(134, 214, 154, 0.12);
+  --ember: #E3A15E;       /* warm secondary, used sparingly */
+  /* Masthead scene is always dusk, in both themes */
+  --scene-ink: #F3EBD9;
+  --scene-muted: #CDBFA3;
+  --scene-green: #9BE6AC;
+  color-scheme: dark;
+
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --f-body: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --s-xs: 0.75rem; --s-sm: 0.875rem; --s-base: 1.02rem; --s-md: 1.22rem; --s-lg: 1.9rem; --s-xl: clamp(2.4rem, 6.5vw, 4.1rem);
+  --wrap: 66rem;
+  --px: 3px;              /* one "pixel" for UI sprites and borders */
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #F4F1E8; --panel: #EBE6D9; --ink: #1F1C16; --muted: #645C4E; --line: #D6CFBF;
+    --green: #2F7D47; --green-dim: rgba(47, 125, 71, 0.10); --ember: #A65E1E; color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #F4F1E8; --panel: #EBE6D9; --ink: #1F1C16; --muted: #645C4E; --line: #D6CFBF;
+  --green: #2F7D47; --green-dim: rgba(47, 125, 71, 0.10); --ember: #A65E1E; color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--s-base); line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: var(--wrap); margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--green); text-decoration: none; }
+a:hover { text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; }
+a:focus-visible { outline: var(--px) solid var(--green); outline-offset: 3px; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1, h2 { font-family: var(--f-pixel); font-weight: 500; letter-spacing: 0.01em; line-height: 1.1; }
+p, ul, ol { margin: 0; }
+ul { padding-left: 1.1rem; display: grid; gap: 0.35rem; }
+ul li::marker { color: var(--green); }
+.label {
+  font-family: var(--f-mono); font-size: var(--s-xs); letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted); font-weight: 400;
+}
+
+/* Pixel border: four flat shadows leave the corners notched, like a sprite box */
+.pxbox {
+  box-shadow:
+    0 calc(-1 * var(--px)) 0 0 var(--line), 0 var(--px) 0 0 var(--line),
+    calc(-1 * var(--px)) 0 0 0 var(--line), var(--px) 0 0 0 var(--line);
+}
+
+/* Masthead */
+.mast { position: relative; overflow: hidden; background: #0E1512; color: var(--scene-ink); }
+#sky { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; image-rendering: crisp-edges; }
+.mast .wrap { position: relative; padding-block: clamp(4rem, 11vw, 7.5rem) clamp(5rem, 12vw, 8rem); display: grid; gap: 1.3rem; }
+.mast .label { color: var(--scene-muted); }
+.mast .label .gem { color: var(--scene-green); }
+.mast h1 { font-size: var(--s-xl); max-width: 16ch; text-shadow: var(--px) var(--px) 0 rgba(0,0,0,0.35); }
+.mast .intro { font-size: var(--s-md); line-height: 1.55; max-width: 34ch; color: var(--scene-muted); }
+.mast .links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.75rem; font-family: var(--f-mono); font-size: var(--s-sm); }
+.mast a { color: var(--scene-green); }
+
+/* Index */
+.index { padding-block: 3.5rem 0.5rem; }
+.index-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding-bottom: 0.75rem; border-bottom: var(--px) solid var(--line); }
+.index ol { list-style: none; padding: 0; }
+.index li a {
+  display: grid; grid-template-columns: 4rem minmax(0, 1fr) auto; gap: 1rem; align-items: baseline;
+  padding-block: 1rem; border-bottom: 1px dashed var(--line); color: var(--ink);
+}
+.index li a:hover { text-decoration: none; }
+.i-year { font-family: var(--f-mono); font-size: var(--s-sm); color: var(--muted); font-variant-numeric: tabular-nums; }
+.i-name { font-size: var(--s-md); font-weight: 500; transition: color .15s; }
+.i-name::before { content: "▸ "; color: var(--green); opacity: 0; transition: opacity .15s; margin-left: -1.1em; }
+.index li a:hover .i-name, .index li a:focus-visible .i-name { color: var(--green); }
+.index li a:hover .i-name::before, .index li a:focus-visible .i-name::before { opacity: 1; }
+.i-tags { font-family: var(--f-mono); font-size: var(--s-xs); color: var(--muted); text-align: right; }
+
+/* Projects */
+.project { padding-block: clamp(3.5rem, 8vw, 5.5rem); border-bottom: 1px dashed var(--line); scroll-margin-top: 1rem; }
+.p-top { display: grid; gap: 0.7rem; margin-bottom: 2.25rem; }
+.p-top h2 { font-size: var(--s-lg); }
+.p-top .lede { font-size: var(--s-md); line-height: 1.55; max-width: 46ch; color: var(--muted); }
+.p-grid { display: grid; grid-template-columns: 14.5rem minmax(0, 1fr); gap: clamp(1.75rem, 4vw, 3.5rem); align-items: start; }
+.facts { display: grid; gap: 1.2rem; font-size: var(--s-sm); margin: 0; }
+.facts dt { margin-bottom: 0.3rem; }
+.facts dd { margin: 0; }
+.facts .links { display: grid; gap: 0.3rem; font-family: var(--f-mono); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.6rem 0.65rem; padding: var(--px); }
+.chip { font-family: var(--f-mono); font-size: var(--s-xs); padding: 0.1rem 0.45rem; color: var(--ink); background: var(--panel); }
+.body { display: grid; gap: 1.1rem; max-width: 41rem; min-width: 0; }
+.body h3 { font-family: var(--f-body); font-size: var(--s-base); font-weight: 600; margin-top: 1rem; display: flex; align-items: center; gap: 0.75rem; }
+/* 3x3 pixel diamond sprite */
+.body h3::before {
+  content: ""; width: var(--px); height: var(--px); background: var(--green); flex: none; margin-inline: var(--px);
+  box-shadow: var(--px) 0 0 var(--green), calc(-1 * var(--px)) 0 0 var(--green), 0 var(--px) 0 var(--green), 0 calc(-1 * var(--px)) 0 var(--green);
+}
+
+/* Figures sit in a pixel frame */
+.frame { margin: 0 0 2.25rem; padding: 8px; background: var(--panel); }
+.frame img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: 0.7rem; padding-inline: 0.25rem; font-size: var(--s-sm); color: var(--muted); max-width: 64ch; }
+
+.logo-panel { background: #FFFFFF; display: grid; place-items: center; aspect-ratio: 16 / 6; max-width: 100%; padding: 2rem; }
+.logo-panel img { width: auto; max-width: min(100%, 26rem); max-height: 100%; }
+.logo-fallback { font-family: var(--f-pixel); font-weight: 500; font-size: clamp(1.6rem, 5vw, 2.6rem); color: #1F1C16; }
+
+/* Readouts */
+.readouts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; padding: var(--px); margin-block: 0.5rem; }
+.readout { background: var(--panel); padding: 0.9rem 1rem; display: grid; gap: 0.2rem; align-content: start; }
+.readout b { font-family: var(--f-pixel); font-size: 1.65rem; font-weight: 500; color: var(--green); font-variant-numeric: tabular-nums; line-height: 1.15; }
+.readout span { font-size: var(--s-sm); color: var(--muted); line-height: 1.4; }
+
+/* Sequences (real ordered steps) */
+.steps { list-style: none; padding: 0; display: grid; gap: 0; counter-reset: step; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.85rem; border-top: 1px dashed var(--line); }
+.steps li:last-child { border-bottom: 1px dashed var(--line); }
+.steps li::before { content: counter(step, decimal-leading-zero); font-family: var(--f-mono); font-size: var(--s-sm); color: var(--green); padding-top: 0.15rem; }
+.steps .label { display: block; color: var(--ember); }
+
+.role { background: var(--green-dim); padding: 0.9rem 1.1rem; border-left: var(--px) solid var(--green); }
+
+footer { padding-block: 3rem 4rem; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; font-family: var(--f-mono); font-size: var(--s-xs); color: var(--muted); }
+
+@media (max-width: 760px) {
+  .p-grid { grid-template-columns: minmax(0, 1fr); }
+  .facts { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); }
+  .readouts { grid-template-columns: minmax(0, 1fr); }
+  .index li a { grid-template-columns: 3.25rem minmax(0, 1fr); }
+  .i-tags { grid-column: 2; text-align: left; }
+  .i-name::before { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="mast">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <span class="label"><span class="gem">◆</span>&nbsp; Software engineer · Madison, WI</span>
+    <h1>Henry Keeler</h1>
+    <p class="intro">Hi, I'm Henry. I like problems where the obvious approach almost works, and figuring out why it doesn't. These are a few things I've built, along with what I learned along the way.</p>
+    <div class="links">
+      <a href="#projects">Projects</a>
+      <a href="https://docs.google.com/document/d/1Nr9_P3UoWjgyEB6uvb-1aSvs8XraqKjAKHJQ6kfsMBI/edit?usp=drive_link">Résumé</a>
+      <a href="https://github.com/halo174">github.com/halo174</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="index wrap" id="projects" aria-labelledby="index-title">
+    <div class="index-head">
+      <h2 id="index-title" class="label">Projects</h2>
+      <span class="label">4 entries</span>
+    </div>
+    <ol>
+      <li><a href="#pbs"><span class="i-year">2026</span><span class="i-name">PBS Wisconsin AI Support Assistant</span><span class="i-tags">RAG · Claude API · React</span></a></li>
+      <li><a href="#trail"><span class="i-year">2026</span><span class="i-name">Fantasy Trail Stitcher</span><span class="i-tags">Graph search · Maps</span></a></li>
+      <li><a href="#sendit"><span class="i-year">2026</span><span class="i-name">Send It</span><span class="i-tags">React · Web app</span></a></li>
+      <li><a href="#genre"><span class="i-year">2025</span><span class="i-name">Video Game Poster Genre Matcher</span><span class="i-tags">Deep learning · Vision</span></a></li>
+    </ol>
+  </section>
+
+  <!-- PBS Wisconsin -->
+  <article class="project" id="pbs">
+    <div class="wrap">
+      <div class="p-top">
+        <span class="label">AI · Client project with PBS Wisconsin</span>
+        <h2>PBS Wisconsin AI Support Assistant</h2>
+        <p class="lede">A help desk tool we built with PBS Wisconsin's Audience Services team, to help staff answer viewer questions quickly and point to where each answer came from.</p>
+      </div>
+
+      <div class="p-grid">
+        <dl class="facts">
+          <div><dt class="label">My role</dt><dd>Scrum Master and developer</dd></div>
+          <div><dt class="label">Team</dt><dd>Six-person student engineering team</dd></div>
+          <div><dt class="label">Stack</dt><dd class="chips"><span class="chip pxbox">React 18</span><span class="chip pxbox">Vite</span><span class="chip pxbox">Python</span><span class="chip pxbox">FastAPI</span><span class="chip pxbox">Claude API</span><span class="chip pxbox">fastembed</span><span class="chip pxbox">BM25</span><span class="chip pxbox">pytest</span><span class="chip pxbox">GitLab CI</span></dd></div>
+          <div><dt class="label">Source</dt><dd>Private repository</dd></div>
+        </dl>
+
+        <div class="body">
+          <div class="role">
+            <p>I was the team's Scrum Master and also wrote code for the app. I ran most of our meetings with the folks at PBS Wisconsin, which mostly meant listening carefully to how their staff actually work and then turning that into specs and stories the team could pick up.</p>
+          </div>
+
+          <h3>The problem</h3>
+          <p>Audience Services staff field a lot of calls and emails about things like PBS Passport, streaming devices, live TV and member accounts. The answers exist, but they're spread across hundreds of help articles on three different sites. What they wanted was a faster way to find the right one. What they really didn't want was an AI that sounds confident about a policy it made up, so that concern shaped most of our design decisions.</p>
+
+          <div class="readouts" role="list">
+            <div class="readout pxbox" role="listitem"><b>366</b><span>help pages indexed</span></div>
+            <div class="readout pxbox" role="listitem"><b>~750</b><span>passages, each traceable from an answer</span></div>
+            <div class="readout pxbox" role="listitem"><b>52</b><span>backend tests, none calling the paid API</span></div>
+          </div>
+
+          <h3>What it does</h3>
+          <p>A staff member types in the viewer's question and gets a short summary with steps, where every claim links back to the help article it came from. Clicking a citation shows the exact passage, who owns the page and when it was last updated, so staff can check it themselves.</p>
+          <p>The part I'm happiest with is how it behaves when it isn't sure. If the search can't back up an answer, it says "No verified answer" and shows the closest pages instead of guessing. Questions about billing, eligibility or availability always need a source. Staff can also log those gaps so the help content can improve over time.</p>
+          <p>A few smaller things came straight out of conversations with the team at PBS: a "phone script" button that rewrites an answer into something you can read aloud on a call (keeping the same sources), a one-click email reply, and follow-up questions that remember context, so "what about Roku?" still means Passport on Roku.</p>
+
+          <h3>How it works</h3>
+          <ol class="steps">
+            <li><div>A crawler saves the public help pages and, on later runs, only fetches what changed. A typical refresh takes about 17 requests.</div></li>
+            <li><div>Pages are split into roughly 200-word passages and embedded with a small model that runs locally on the CPU, so this part costs nothing to run.</div></li>
+            <li><div>Each question is searched two ways, by meaning and by exact keywords (which helps with error messages and device names), and the two rankings are merged.</div></li>
+            <li><div>Claude writes the answer in a fixed structure that lists which passages it used.</div></li>
+            <li><div>Before anything reaches the screen, the backend checks those citations against what Claude was actually given and fills in the real text and links itself. If nothing checks out, the answer becomes "no answer." This turned out to be the simplest way to make sure the model can't cite a source that doesn't exist.</div></li>
+          </ol>
+
+          <h3>How we worked</h3>
+          <p>We wrote a short spec for each feature and reviewed it together before anyone started building, which saved us from a lot of rework. Work was planned in sprints, and every merge request ran the tests and a production build automatically. The login screen is only a design for now; connecting it to PBS Wisconsin's single sign-on would be the next step, along with a few other things we ran out of time for.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Fantasy Trail -->
+  <article class="project" id="trail">
+    <div class="wrap">
+      <div class="p-top">
+        <span class="label">Route planning · 2026</span>
+        <h2>Fantasy Trail Stitcher</h2>
+        <p class="lede">Walk a legendary journey at its real length, a few kilometers at a time near home. Each walk is a real route that matches the distance you pick, sticking to trails where it can.</p>
+      </div>
+
+      <figure class="frame pxbox">
+        <img src="route_arboretum.png" width="1356" height="790" alt="Map of a generated walking route through the UW-Madison Arboretum, following trails through prairie and woods to the shore of Lake Wingra." loading="lazy">
+        <figcaption>An 8,000 m route near the UW-Madison Arboretum, through Curtis Prairie, Longenecker Gardens and Gallistrom Woods, then along Lake Wingra to Vilas Park.</figcaption>
+      </figure>
+
+      <div class="p-grid">
+        <dl class="facts">
+          <div><dt class="label">Stack</dt><dd class="chips"><span class="chip pxbox">Python</span><span class="chip pxbox">OSMnx</span><span class="chip pxbox">NetworkX</span><span class="chip pxbox">FastAPI</span><span class="chip pxbox">Leaflet</span><span class="chip pxbox">pytest</span></dd></div>
+          <div><dt class="label">Data</dt><dd>OpenStreetMap. Madison's 50-mile map is built ahead of time; other US cities are pulled on demand.</dd></div>
+          <div><dt class="label">Links</dt><dd class="links"><a href="https://github.com/halo174/fantasy-trail-app">Source on GitHub</a></dd></div>
+        </dl>
+
+        <div class="body">
+          <p>The idea is simple: Frodo's road from Bag End to Mount Doom is about 2,865 km, so what if you walked it for real, 5 or 10 km at a time near home? You choose how far you want to go today, the app plans a real route of that length, and your progress carries over to the next walk.</p>
+          <p>When a walk reaches a stop on the journey, the route bends through a real place that fits it. From the Arboretum, the Dead Marshes land in Gardner Marsh, and from campus, Lothlórien lands in Muir Woods. It works in any US city, too: the app downloads that city's map the first time someone walks there and saves it for next time.</p>
+          <p>Underneath all of that is a routing problem that turned out to be more interesting than I expected. Finding the shortest path between two points is a solved problem. Finding a path of a <em>specific</em> length is a lot harder, and most of this project is me working out why.</p>
+
+          <div class="readouts" role="list">
+            <div class="readout pxbox" role="listitem"><b>0 → 90%+</b><span>loop success from an urban start after the bridge fix</span></div>
+            <div class="readout pxbox" role="listitem"><b>49 / 50</b><span>loops of 3–20 km within tolerance</span></div>
+            <div class="readout pxbox" role="listitem"><b>&lt; 0.7 s</b><span>median time to plan a 20 km loop</span></div>
+          </div>
+
+          <h3>What I tried, in order</h3>
+          <ol class="steps">
+            <li><div><span class="label">First try</span>I started by listing the shortest paths in order (Yen's algorithm) and picking the first one long enough. It stalled quickly, since the first 50 paths were all barely longer than the shortest one.</div></li>
+            <li><div><span class="label">Better</span>Next I built the path step by step with a randomized search that backs up at dead ends, skipping any turn that couldn't reach the destination in the distance left. That got much further.</div></li>
+            <li><div><span class="label">What stuck</span>Very long routes still failed sometimes, and pulling in more map data didn't help. That's because finding the longest route between two points is a famously hard (NP-hard) problem. Lots of short attempts ended up working better than one long one.</div></li>
+          </ol>
+
+          <h3>Trails, roads and loops</h3>
+          <p>One surprise was how little of the map is actually trail: around 83% road and under 5% trail, in thousands of disconnected pieces. So instead of banning roads, the search just prefers trails when it has a choice. Loops brought their own puzzle. A quarter of all segments are dead ends like cul-de-sacs and driveways, which a loop can never use without backtracking. Filtering those out up front took the success rate from an urban start from zero to over 90%.</p>
+
+          <h3>Stops on real places</h3>
+          <p>Each stop on a journey has a kind of terrain, like forest, water, marsh, hill or bridge, with fallbacks when there's nothing close (a hill falls back to a tower, then to woods). A walk that reaches a stop is planned in legs: out to a matching place at about the right distance, then on to the finish, without reusing any stretch from an earlier leg. If nothing fits, the stop goes at its proportional point on a normal route instead. I decided early that the walk's length should always come before the scenery, since that's the part people are actually counting on.</p>
+
+          <h3>Other cities</h3>
+          <p>Pulling a new city's map takes a few minutes, and almost all of that is waiting on the free public OpenStreetMap service. Decorah, Iowa took about 4 minutes to download and under 2 seconds to build. The page shows a "preparing" state while it waits, and each city only has to be downloaded once.</p>
+          <p>There's still plenty I'd like to improve. Progress is saved in the browser, so it doesn't follow you to another device, and stops can only land on places OpenStreetMap has mapped.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Send It -->
+  <article class="project" id="sendit">
+    <div class="wrap">
+      <div class="p-top">
+        <span class="label">Web app · 2026</span>
+        <h2>Send It</h2>
+        <p class="lede">A simple tracker for rock climbers to keep a log of the routes they've tried, are working on and have finished.</p>
+      </div>
+      <div class="p-grid">
+        <dl class="facts">
+          <div><dt class="label">Stack</dt><dd class="chips"><span class="chip pxbox">React</span><span class="chip pxbox">Vite</span><span class="chip pxbox">React Router</span><span class="chip pxbox">React Bootstrap</span></dd></div>
+          <div><dt class="label">Context</dt><dd>CS 571, Building User Interfaces</dd></div>
+          <div><dt class="label">Links</dt><dd class="links"><a href="https://cs571-s26.github.io/p75/">Live site</a><a href="https://github.com/CS571-S26/p75">Source on GitHub</a></dd></div>
+        </dl>
+        <div class="body">
+          <p>Most climbers I know keep this list in their heads, or in a notes app that gets messy fast. Send It lets you log a route with its grade, style and notes, mark it as unclimbed, a project or sent, and filter by where you're at. A few stats at the top update as you go.</p>
+          <p>I built it for a user interface course, so I spent most of my time on the small details: keeping components reusable, making the layout calm and readable, and making sure it worked well on a phone at the crag.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Genre matcher -->
+  <article class="project" id="genre">
+    <div class="wrap">
+      <div class="p-top">
+        <span class="label">Machine learning · 2025</span>
+        <h2>Video Game Poster Genre Matcher</h2>
+        <p class="lede">A group project asking a simple question: how much can a model tell about a game's genre just from its cover art?</p>
+      </div>
+      <div class="p-grid">
+        <dl class="facts">
+          <div><dt class="label">Stack</dt><dd class="chips"><span class="chip pxbox">TensorFlow</span><span class="chip pxbox">Keras</span><span class="chip pxbox">scikit-learn</span><span class="chip pxbox">Jupyter</span></dd></div>
+          <div><dt class="label">Team</dt><dd>Group project</dd></div>
+          <div><dt class="label">Links</dt><dd class="links"><a href="https://github.com/halo174/videogame_poster_genre_matcher">Notebooks on GitHub</a></dd></div>
+        </dl>
+        <div class="body">
+          <p>Cover art is designed to tell you what kind of game you're looking at, so we wondered how much of that a model could pick up across ten genres, from Action and Role-Playing to Puzzle and Simulation.</p>
+          <p>We started with a simple logistic regression as a baseline, then trained a small convolutional network from scratch, and finally tried transfer learning with pretrained models (MobileNetV2, EfficientNetB0 and VGG). Looking at top-3 accuracy and the confusion matrices was the most interesting part, since the mistakes were often understandable ones between genres whose covers really do look alike.</p>
+        </div>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Henry Keeler · 2026</span>
+    <span style="display:flex;flex-wrap:wrap;gap:1.25rem"><a href="https://docs.google.com/document/d/1Nr9_P3UoWjgyEB6uvb-1aSvs8XraqKjAKHJQ6kfsMBI/edit?usp=drive_link">Résumé</a><a href="https://github.com/halo174">github.com/halo174</a></span>
+  </div>
+</footer>
+
+<script>
+// Masthead: a pixel-art dusk drawn at 1/4 resolution and scaled up with crisp edges.
+// Seeded, so the scene is the same on every visit. Fireflies drift slowly unless motion is reduced.
+(function () {
+  const cv = document.getElementById('sky');
+  const ctx = cv.getContext('2d');
+  const P = 4; // screen pixels per art pixel
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hex = h => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
+  const SKY = ['#0E1512','#112019','#16291F','#1E3324','#2D3B27','#4A4428','#74552C','#A8693A','#CF8748'].map(hex);
+  const BAYER = [0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v => (v + 0.5) / 16);
+  let W = 0, H = 0, base = null, flies = [];
+
+  function rng(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+
+  function build() {
+    W = Math.ceil(cv.clientWidth / P); H = Math.ceil(cv.clientHeight / P);
+    if (!W || !H) return false;
+    cv.width = W; cv.height = H;
+    const img = ctx.createImageData(W, H), d = img.data;
+    const put = (x, y, c) => { if (x < 0 || y < 0 || x >= W || y >= H) return; const i = (y * W + x) * 4; d[i] = c[0]; d[i+1] = c[1]; d[i+2] = c[2]; d[i+3] = 255; };
+    const r = rng(7331);
+
+    // Sky: banded gradient with ordered dithering between bands
+    const horizon = Math.round(H * 0.78);
+    for (let y = 0; y < H; y++) {
+      const t = Math.min(y / horizon, 1) * (SKY.length - 1);
+      const b = Math.floor(t), f = t - b;
+      for (let x = 0; x < W; x++) {
+        const use = f > BAYER[(y & 3) * 4 + (x & 3)] ? Math.min(b + 1, SKY.length - 1) : b;
+        put(x, y, SKY[use]);
+      }
+    }
+    // Stars in the upper sky
+    const starC = [hex('#F3EBD9'), hex('#BFE9C8'), hex('#9BE6AC')];
+    for (let i = 0; i < W * H / 90; i++) {
+      const x = Math.floor(r() * W), y = Math.floor(r() * horizon * 0.6);
+      put(x, y, starC[r() < 0.7 ? 0 : (r() < 0.5 ? 1 : 2)]);
+      if (r() < 0.06) { put(x+1, y, starC[0]); put(x-1, y, starC[0]); put(x, y+1, starC[0]); put(x, y-1, starC[0]); }
+    }
+    // Moon with a faint green halo
+    const mx = Math.round(W * 0.8), my = Math.round(H * 0.26), mr = Math.max(5, Math.round(H * 0.09));
+    const moon = hex('#EADFC2'), crater = hex('#C9BD9C'), halo = hex('#2E4A36');
+    for (let y = -mr * 2; y <= mr * 2; y++) for (let x = -mr * 2; x <= mr * 2; x++) {
+      const dd = Math.sqrt(x * x + y * y);
+      if (dd <= mr) put(mx + x, my + y, moon);
+      else if (dd <= mr * 1.6 && BAYER[((my + y) & 3) * 4 + ((mx + x) & 3)] < 0.35 * (1 - (dd - mr) / (mr * 0.6))) put(mx + x, my + y, halo);
+    }
+    [[-0.3,-0.2,0.22],[0.35,0.15,0.16],[-0.1,0.4,0.12]].forEach(([cx, cy, cr]) => {
+      const R = Math.max(1, Math.round(mr * cr));
+      for (let y = -R; y <= R; y++) for (let x = -R; x <= R; x++) if (x*x + y*y <= R*R) put(mx + Math.round(cx * mr) + x, my + Math.round(cy * mr) + y, crater);
+    });
+    // Ridges: far mountains, then near hills
+    const ridge = (seed, amp, baseY, freq) => { const q = rng(seed), ph = [q()*6, q()*6, q()*6];
+      return x => Math.round(baseY - amp * (0.55 * Math.sin(x * freq + ph[0]) + 0.3 * Math.sin(x * freq * 2.3 + ph[1]) + 0.15 * Math.sin(x * freq * 5.1 + ph[2]))); };
+    const far = ridge(11, H * 0.12, H * 0.70, 0.045), near = ridge(23, H * 0.06, H * 0.84, 0.03);
+    const farC = hex('#25302A'), nearC = hex('#18201A'), ground = hex('#111712');
+    for (let x = 0; x < W; x++) {
+      for (let y = far(x); y < H; y++) put(x, y, farC);
+      for (let y = near(x); y < H; y++) put(x, y, y > near(x) + 2 ? ground : nearC);
+    }
+    // Pines along the near hill
+    for (let x = 2; x < W; x += 3 + Math.floor(r() * 6)) {
+      if (r() < 0.45) continue;
+      const h = 4 + Math.floor(r() * 6), gy = near(x);
+      for (let k = 0; k < h; k++) { const half = Math.floor((h - k) / 2.2); for (let j = -half; j <= half; j++) put(x + j, gy - k, nearC); }
+    }
+    // Watchtower with one lit green window
+    const tx = Math.round(W * 0.88), ty = near(tx), th = Math.max(14, Math.round(H * 0.22)), stone = hex('#1C241D');
+    for (let y = ty - th; y < ty + 2; y++) for (let x = tx - 3; x <= tx + 3; x++) put(x, y, stone);
+    for (let x = tx - 5; x <= tx + 5; x++) { put(x, ty - th, stone); put(x, ty - th - 1, stone); }
+    for (let x = tx - 5; x <= tx + 5; x += 2) put(x, ty - th - 2, stone);
+    const win = hex('#9BE6AC'), glow = hex('#3C6A48');
+    const wy = ty - th + 4;
+    [[-1,-1],[0,-1],[1,-1],[-1,2],[0,3],[1,2],[-2,0],[-2,1],[2,0],[2,1]].forEach(([dx,dy]) => put(tx+dx, wy+dy, glow));
+    put(tx, wy, win); put(tx, wy + 1, win); put(tx - 1, wy, win); put(tx + 1, wy, win); put(tx - 1, wy + 1, win); put(tx + 1, wy + 1, win);
+
+    // Darken the left side so the text stays readable
+    const shade = hex('#0E1512');
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      // Solid behind the text, then a dithered edge into the scene
+      const t = (W * 0.6 - x) / (W * 0.16);
+      if (t >= 1 || (t > 0 && BAYER[(y & 3) * 4 + (x & 3)] < t)) put(x, y, shade);
+    }
+    for (let i = 0; i < W * H / 400; i++) { const x = Math.floor(r() * W * 0.45), y = Math.floor(r() * H * 0.9); if (r() < 0.5) put(x, y, hex('#3A4A3F')); }
+    base = img;
+    const fr = rng(99);
+    flies = Array.from({ length: Math.max(8, Math.round(W / 22)) }, () => ({
+      x: W * (0.35 + fr() * 0.65), y: H * (0.62 + fr() * 0.3), p: fr() * 6.28, s: 0.4 + fr() * 0.6
+    }));
+    return true;
+  }
+
+  function frame(t) {
+    if (!base) return;
+    ctx.putImageData(base, 0, 0);
+    const time = t / 1000;
+    for (const f of flies) {
+      const on = Math.sin(time * f.s * 2 + f.p) > -0.2;
+      if (!on) continue;
+      const x = Math.round(f.x + Math.sin(time * f.s * 0.5 + f.p) * 6), y = Math.round(f.y + Math.cos(time * f.s * 0.4 + f.p) * 3);
+      ctx.fillStyle = '#B6F2C2'; ctx.fillRect(x, y, 1, 1);
+      ctx.fillStyle = 'rgba(155,230,172,0.35)'; ctx.fillRect(x - 1, y, 1, 1); ctx.fillRect(x + 1, y, 1, 1); ctx.fillRect(x, y - 1, 1, 1); ctx.fillRect(x, y + 1, 1, 1);
+    }
+  }
+
+  let last = 0;
+  function loop(t) { if (t - last > 110) { frame(t); last = t; } requestAnimationFrame(loop); }
+  if (build()) { frame(0); if (!reduce) requestAnimationFrame(loop); }
+  let rz; window.addEventListener('resize', () => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { if (build()) frame(performance.now()); }); });
+})();
+</script>
+</body>
+</html>
